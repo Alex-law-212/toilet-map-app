@@ -2,14 +2,14 @@ import streamlit as st
 import gspread
 from google.oauth2.service_account import Credentials
 
-from config import GCP_CREDENTIALS, SPREADSHEET_NAME
+from config import SERVICE_ACCOUNT_INFO, SPREADSHEET_NAME
 
 def connect_sheet():
     scopes = [
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
-    creds = Credentials.from_service_account_info(GCP_CREDENTIALS, scopes=scopes)
+    creds = Credentials.from_service_account_info(SERVICE_ACCOUNT_INFO, scopes=scopes)
     client = gspread.authorize(creds)
     sheet = client.open(SPREADSHEET_NAME).sheet1
     return sheet
