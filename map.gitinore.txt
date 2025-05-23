@@ -1,2 +1,2 @@
 __pycache__/
-*.json
+ratingdata-932e0273e0af.json
