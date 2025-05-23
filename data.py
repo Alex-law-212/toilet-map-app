@@ -14,6 +14,7 @@ def connect_sheet():
     sheet = client.open(SPREADSHEET_NAME).sheet1
     return sheet
 
+@st.cache_data(ttl=3600)  # 缓存时间：1 小时，可自由调整
 def get_all_locations():
     sheet = connect_sheet()
     return sheet.get_all_records()
