@@ -23,19 +23,29 @@ if category is None:
 else:
     filtered = [p for p in data if p.get("type", "").strip().lower() == category]
 
-# === 預設交通方式為步行 ===
+# === 初始化 session_state ===
+if "user_pos" not in st.session_state:
+    st.session_state["user_pos"] = None
+if "route_coords" not in st.session_state:
+    st.session_state["route_coords"] = []
+
+# === 交通方式 ===
 profile = "foot-walking"
 
-# === 使用者位置與路線初始為 None ===
-user_pos = None
-route_coords = []
-nearest = None
+# === 取得定位按鈕 ===
+if st.button("📍 取得目前位置"):
+    pos = get_user_location()
+    if pos:
+        st.session_state["user_pos"] = pos
+        st.success(f"✅ 已取得定位：{pos}")
+    else:
+        st.warning("⚠️ 無法取得 GPS 定位，請確認瀏覽器已允許定位權限")
 
-# === 導航按鈕：使用者按了才抓定位與畫線 ===
-if st.button("🔍 導航到最近地點"):
-    user_pos = get_user_location()
+# === 導航按鈕 ===
+if st.button("🚀 導航到最近地點"):
+    user_pos = st.session_state["user_pos"]
     if not user_pos:
-        st.warning("⚠️ 無法取得 GPS 定位，請確認已允許權限")
+        st.warning("⚠️ 尚未定位，請先按『📍 取得目前位置』")
     else:
         nearest = find_nearest(user_pos, filtered) if filtered else None
         if nearest:
@@ -43,15 +53,16 @@ if st.button("🔍 導航到最近地點"):
                 lat = float(nearest["lat"])
                 lng = float(nearest["lng"])
                 target_pos = (lat, lng)
-                route_coords = get_route(user_pos, target_pos, profile)
-            except:
-                route_coords = []
+                st.session_state["route_coords"] = get_route(user_pos, target_pos, profile)
+                st.success(f"🎯 已產生路線 → {nearest['name']}")
+            except Exception as e:
+                st.session_state["route_coords"] = []
+                st.error(f"❌ 無法計算路線：{e}")
 
 # === 建立分欄：地圖 + 評分 ===
 col1, col2 = st.columns([3, 1])
 
 with col1:
-    # === 建立地圖（預設 OpenStreetMap） ===
     m = folium.Map(location=[25.0173, 121.5398], zoom_start=17, tiles="OpenStreetMap")
 
     # === 畫地標 ===
@@ -75,7 +86,10 @@ with col1:
         popup = f"<b>{name}</b><br>類型: {type_}<br>平均評分: {rating}"
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
 
-    # === 畫定位與路線 ===
+    # === 畫使用者定位與路線 ===
+    user_pos = st.session_state.get("user_pos")
+    route_coords = st.session_state.get("route_coords", [])
+
     if user_pos:
         folium.Marker(user_pos, tooltip="你的位置", icon=folium.Icon(color="cadetblue")).add_to(m)
     if route_coords:
