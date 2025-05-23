@@ -1,3 +1,10 @@
-SERVICE_ACCOUNT_FILE = "ratingdata-932e0273e0af.json"
+import streamlit as st
+
+# 讀取 Google Sheet 名稱
 SPREADSHEET_NAME = "pin_data"
-ORS_API_KEY = "5b3ce3597851110001cf6248d2516b1dd80b4fdda369e6b683ca5647" 
+
+# 讀取 OpenRouteService 的 API 金鑰（從 secrets 裡）
+ORS_API_KEY = st.secrets["ORS_API_KEY"]
+
+# 讀取 Google 憑證（從 secrets 裡）
+GCP_CREDENTIALS = dict(st.secrets["gcp_service_account"])
