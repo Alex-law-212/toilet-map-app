@@ -11,12 +11,12 @@ from location import get_user_location
 st.set_page_config(page_title="📍 地標互動地圖系統", layout="wide")
 st.title("📍 地標互動地圖 + 評分系統")
 
-# === 類別選單（中文 UI → 英文資料對應）===
+# === 類別選單 ===
 category_ui = st.radio("📂 顯示類型", ["全部", "餐廳", "廁所"])
 category_map = {"全部": None, "餐廳": "restaurant", "廁所": "toilet"}
 category = category_map[category_ui]
 
-# === 載入資料並分類 ===
+# === 載入資料 ===
 data = get_all_locations()
 if category is None:
     filtered = data
@@ -29,23 +29,29 @@ if "user_pos" not in st.session_state:
 if "route_coords" not in st.session_state:
     st.session_state["route_coords"] = []
 
-# === 交通方式 ===
 profile = "foot-walking"
 
-# === 取得定位按鈕 ===
-if st.button("📍 取得目前位置"):
-    pos = get_user_location()
-    if pos:
-        st.session_state["user_pos"] = pos
-        st.success(f"✅ 已取得定位：{pos}")
-    else:
-        st.warning("⚠️ 無法取得 GPS 定位，請確認瀏覽器已允許定位權限")
+# === 取得定位區塊 ===
+with st.expander("📍 定位選項", expanded=True):
+    if st.button("📍 嘗試自動定位（需授權）"):
+        pos = get_user_location()
+        if pos:
+            st.session_state["user_pos"] = pos
+            st.success(f"✅ 已自動定位成功：{pos}")
+        else:
+            st.warning("⚠️ 無法取得定位，請確認瀏覽器已授權，或改用手動輸入")
+
+    lat = st.number_input("🔢 手動輸入緯度", format="%.6f", value=25.0173)
+    lng = st.number_input("🔢 手動輸入經度", format="%.6f", value=121.5398)
+    if st.button("✅ 使用手動輸入座標"):
+        st.session_state["user_pos"] = (lat, lng)
+        st.success(f"✅ 已設定自訂位置：({lat}, {lng})")
 
 # === 導航按鈕 ===
 if st.button("🚀 導航到最近地點"):
     user_pos = st.session_state["user_pos"]
     if not user_pos:
-        st.warning("⚠️ 尚未定位，請先按『📍 取得目前位置』")
+        st.warning("⚠️ 尚未定位，請先取得目前位置")
     else:
         nearest = find_nearest(user_pos, filtered) if filtered else None
         if nearest:
@@ -59,13 +65,12 @@ if st.button("🚀 導航到最近地點"):
                 st.session_state["route_coords"] = []
                 st.error(f"❌ 無法計算路線：{e}")
 
-# === 建立分欄：地圖 + 評分 ===
+# === 分欄（地圖 + 評分）===
 col1, col2 = st.columns([3, 1])
 
 with col1:
     m = folium.Map(location=[25.0173, 121.5398], zoom_start=17, tiles="OpenStreetMap")
 
-    # === 畫地標 ===
     for place in filtered:
         try:
             lat = float(place["lat"])
@@ -86,7 +91,6 @@ with col1:
         popup = f"<b>{name}</b><br>類型: {type_}<br>平均評分: {rating}"
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
 
-    # === 畫使用者定位與路線 ===
     user_pos = st.session_state.get("user_pos")
     route_coords = st.session_state.get("route_coords", [])
 
@@ -109,3 +113,12 @@ with col2:
             st.success(f"✅ {selected} 評分成功：{score} 分")
     else:
         st.info("請先選擇有地點的分類")
+
+    # === 顯示定位結果 ===
+    user_pos = st.session_state.get("user_pos")
+    if user_pos:
+        st.markdown("### 📍 目前定位結果")
+        st.write(f"緯度：`{user_pos[0]}`，經度：`{user_pos[1]}`")
+    else:
+        st.markdown("### 📍 尚未定位")
+        st.info("請在上方定位或手動輸入座標")
