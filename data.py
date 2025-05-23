@@ -1,13 +1,16 @@
 import gspread
+import json
+import streamlit as st
 from google.oauth2.service_account import Credentials
-from config import SERVICE_ACCOUNT_FILE, SPREADSHEET_NAME
+from config import SPREADSHEET_NAME
 
 def connect_sheet():
     scopes = [
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
-    creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=scopes)
+    creds_dict = json.loads(st.secrets["gcp_service_account"])  # ← 使用 secrets 中的 JSON 字串
+    creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
     client = gspread.authorize(creds)
     return client.open(SPREADSHEET_NAME).sheet1
 
@@ -35,4 +38,3 @@ def calculate_average(ratings):
         scores = []
 
     return round(sum(scores) / len(scores), 2) if scores else 0
-
