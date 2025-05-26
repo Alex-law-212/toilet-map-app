@@ -2,7 +2,6 @@ import streamlit as st
 from streamlit_geolocation import streamlit_geolocation
 import pandas as pd
 
-# 假設你有個 CSV 檔，裡面有地點資訊（name, lat, lng）
 DATA_PATH = "data.csv"
 
 def load_location_data():
@@ -14,7 +13,6 @@ def load_location_data():
         return pd.DataFrame(columns=["name", "lat", "lng"])
 
 def calculate_distance(lat1, lng1, lat2, lng2):
-    # 簡單歐氏距離（不考慮地球曲率，近似用）
     return ((lat1 - lat2)**2 + (lng1 - lng2)**2) ** 0.5
 
 def find_nearest_place(lat, lng, df):
@@ -35,7 +33,6 @@ def get_user_location():
             lng = location["longitude"]
             st.success(f"✅ GPS 定位成功：({lat:.6f}, {lng:.6f})")
 
-            # 讀取地點資料並找最近地點
             df = load_location_data()
             nearest = find_nearest_place(lat, lng, df)
             if nearest is not None:
@@ -43,19 +40,30 @@ def get_user_location():
             else:
                 st.warning("找不到最近的地點資料")
             return (lat, lng)
-
         else:
             st.warning("⚠️ 無法取得 GPS 定位，請確認裝置允許權限")
 
-    # 手動輸入
+    # 手動輸入改成用 session_state 即時更新
     st.markdown("---")
     st.markdown("或手動輸入座標")
-    lat = st.number_input("緯度", format="%.6f", value=25.0173)
-    lng = st.number_input("經度", format="%.6f", value=121.5398)
-    if st.button("設定手動座標"):
-        st.success(f"✅ 已設定手動輸入座標：({lat:.6f}, {lng:.6f})")
-        return (lat, lng)
 
-    # 什麼都沒取得
-    st.info("尚未取得定位資訊")
-    return None
+    # 設定 session_state 變數儲存座標，避免刷新丟失
+    if "manual_lat" not in st.session_state:
+        st.session_state.manual_lat = 25.0173
+    if "manual_lng" not in st.session_state:
+        st.session_state.manual_lng = 121.5398
+
+    lat = st.number_input("緯度", format="%.6f", value=st.session_state.manual_lat, key="manual_lat")
+    lng = st.number_input("經度", format="%.6f", value=st.session_state.manual_lng, key="manual_lng")
+
+    # 每次輸入都直接顯示結果，不用按按鈕
+    st.success(f"✅ 手動座標：({lat:.6f}, {lng:.6f})")
+
+    df = load_location_data()
+    nearest = find_nearest_place(lat, lng, df)
+    if nearest is not None:
+        st.info(f"離你最近的地點是：**{nearest['name']}**，距離約 {nearest['distance']:.6f}")
+    else:
+        st.warning("找不到最近的地點資料")
+
+    return (lat, lng)
