@@ -34,10 +34,10 @@ profile = "foot-walking"
 # === 取得定位區塊 ===
 with st.expander("📍 定位選項", expanded=True):
     if st.button("🌐 嘗試以 IP 估算位置"):
-    pos = get_user_location_by_ip()
-    if pos:
-        st.session_state["user_pos"] = pos
-        st.success(f"✅ 已取得 IP 估算位置：{pos}")
+        pos = get_user_location_by_ip()
+        if pos:
+            st.session_state["user_pos"] = pos
+            st.success(f"✅ 已取得 IP 估算位置：{pos}")
     else:
         st.warning("⚠️ 無法以 IP 取得位置")
 
