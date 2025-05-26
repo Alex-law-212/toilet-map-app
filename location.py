@@ -1,16 +1,15 @@
+import requests
 import streamlit as st
-from streamlit_geolocation import streamlit_geolocation
 
-def get_user_location():
+def get_user_location_by_ip():
     try:
-        location = streamlit_geolocation()
-        st.write("🧭 取得的位置資料：", location)  # 除錯用，可移除
-
-        if location and location.get("latitude") is not None and location.get("longitude") is not None:
-            return (location["latitude"], location["longitude"])
-        else:
-            st.warning("⚠️ 無法取得定位，請確認是否授權定位權限")
-            return None
+        res = requests.get("https://ipinfo.io/json")
+        data = res.json()
+        st.write("🌐 IP 定位資料：", data)
+        loc = data["loc"]  # 例如："25.0173,121.5398"
+        lat, lng = map(float, loc.split(","))
+        return (lat, lng)
     except Exception as e:
-        st.error(f"❌ 發生錯誤：{e}")
+        st.error(f"❌ IP 定位失敗：{e}")
         return None
+
