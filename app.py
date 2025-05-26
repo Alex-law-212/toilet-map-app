@@ -5,7 +5,7 @@ from streamlit_folium import st_folium
 from data import get_all_locations, add_rating, calculate_average
 from geo import find_nearest
 from route import get_route
-from location import get_user_location_by_ip
+from location import get_user_location
 
 # === 頁面設定 ===
 st.set_page_config(page_title="📍 地標互動地圖系統", layout="wide")
@@ -33,13 +33,13 @@ profile = "foot-walking"
 
 # === 取得定位區塊 ===
 with st.expander("📍 定位選項", expanded=True):
-    if st.button("🌐 嘗試以 IP 估算位置"):
-        pos = get_user_location_by_ip()
+    if st.button("📍 嘗試自動定位（或地圖點選）"):
+        pos = get_user_location()
         if pos:
             st.session_state["user_pos"] = pos
-            st.success(f"✅ 已取得 IP 估算位置：{pos}")
+            st.success(f"✅ 已設定目前位置：{pos}")
     else:
-        st.warning("⚠️ 無法以 IP 取得位置")
+        st.warning("⚠️ 無法取得定位，請確認授權或使用手動輸入")
 
 # === 導航按鈕 ===
 if st.button("🚀 導航到最近地點"):
