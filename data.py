@@ -38,19 +38,13 @@ def add_rating(name, score):
 
 # 計算平均評分（僅納入 1~5 分、支援 float 格式）
 def calculate_average(rating_str):
-    import json
+    if not rating_str or str(rating_str).strip().lower() == "nan":
+        return "-"
     try:
-        ratings = json.loads(rating_str)
+        clean = str(rating_str).replace("［", "").replace("］", "").replace("[", "").replace("]", "")
+        clean = clean.replace("，", ",")
+        ratings = [int(r.strip()) for r in clean.split(",") if r.strip().isdigit()]
+        return round(sum(ratings) / len(ratings), 1) if ratings else "-"
     except:
-        try:
-            ratings = [r.strip() for r in rating_str.split(",") if r.strip()]
-        except:
-            ratings = []
+        return "-"
 
-    if not ratings:
-        return "-"
-    try:
-        scores = [int(r) for r in ratings if r.isdigit()]
-        return round(sum(scores) / len(scores), 1) if scores else "-"
-    except:
-        return "-"
