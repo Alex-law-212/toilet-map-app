@@ -4,6 +4,7 @@ from google.oauth2.service_account import Credentials
 
 from config import SERVICE_ACCOUNT_INFO, SPREADSHEET_NAME
 
+# 建立與 Google Sheet 的連線
 def connect_sheet():
     scopes = [
         "https://www.googleapis.com/auth/spreadsheets",
@@ -14,11 +15,13 @@ def connect_sheet():
     sheet = client.open(SPREADSHEET_NAME).sheet1
     return sheet
 
-@st.cache_data(ttl=3600)  # 緩存 1 小時
+# 讀取所有地點資料（加上快取，避免每次重新抓）
+@st.cache_data(ttl=600)  # 缓存时间：10分鐘，可自由调整
 def get_all_locations():
     sheet = connect_sheet()
     return sheet.get_all_records()
 
+# 新增評分：將新評分接在原本 ratings 欄位後面
 def add_rating(name, score):
     sheet = connect_sheet()
     try:
@@ -33,11 +36,15 @@ def add_rating(name, score):
     except Exception as e:
         raise ValueError(f"找不到地點或寫入錯誤：{e}")
 
+# 計算平均評分（僅納入 1~5 分、支援 float 格式）
 def calculate_average(ratings):
-    if isinstance(ratings, int):
+    if isinstance(ratings, (int, float)):
         scores = [ratings] if 1 <= ratings <= 5 else []
     elif isinstance(ratings, str):
-        scores = [int(s) for s in ratings.split(",") if s.strip().isdigit() and 1 <= int(s) <= 5]
+        try:
+            scores = [float(s) for s in ratings.split(",") if s.strip() and 1 <= float(s) <= 5]
+        except:
+            scores = []
     else:
         scores = []
 
