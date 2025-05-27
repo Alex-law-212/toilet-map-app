@@ -17,7 +17,7 @@ category_map = {"全部": None, "餐廳": "restaurant", "廁所": "toilet"}
 category = category_map[category_ui]
 
 # === 載入資料 ===
-data = st.session_state["location_data"]
+data = get_all_locations()
 if category is None:
     filtered = data
 else:
