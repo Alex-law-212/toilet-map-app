@@ -37,10 +37,20 @@ def add_rating(name, score):
         raise ValueError(f"找不到地點或寫入錯誤：{e}")
 
 # 計算平均評分（僅納入 1~5 分、支援 float 格式）
-def calculate_average(ratings):
+import json
+
+def calculate_average(rating_str):
     try:
-        # 轉成字串處理，不管來源是數字、空值、None 都能處理
-        scores = [float(s) for s in str(ratings).split(",") if s.strip() and 1 <= float(s) <= 5]
-        return round(sum(scores) / len(scores), 2) if scores else 0
+        # 如果是合法 JSON 格式
+        ratings = json.loads(rating_str)
     except:
-        return 0
+        try:
+            # 如果是逗號分隔格式
+            ratings = [r.strip() for r in rating_str.split(",") if r.strip()]
+        except:
+            ratings = []
+
+    if not ratings:
+        return "-"
+    scores = [int(r) for r in ratings if r.isdigit()]
+    return round(sum(scores) / len(scores), 1) if scores else "-"
