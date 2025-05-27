@@ -89,7 +89,7 @@ with col1:
         elif type_ == "toilet":
             icon_color = "blue"
 
-        popup = folium.Popup(f"<b>{name}</b><br>類型: {type_}<br>平均評分: {rating}",max_width=200)
+        popup = f"<b>{name}</b><br>類型: {type_}<br>平均評分: {rating}"
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
 
     user_pos = st.session_state.get("user_pos")
