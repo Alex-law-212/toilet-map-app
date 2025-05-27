@@ -14,7 +14,7 @@ def connect_sheet():
     sheet = client.open(SPREADSHEET_NAME).sheet1
     return sheet
 
-@st.cache_data(ttl=3600)  # 缓存时间：1 小时，可自由调整
+@st.cache_data(ttl=3600)  # 緩存 1 小時
 def get_all_locations():
     sheet = connect_sheet()
     return sheet.get_all_records()
@@ -35,9 +35,10 @@ def add_rating(name, score):
 
 def calculate_average(ratings):
     if isinstance(ratings, int):
-        scores = [ratings]
+        scores = [ratings] if 1 <= ratings <= 5 else []
     elif isinstance(ratings, str):
-        scores = [int(s) for s in ratings.split(",") if s.strip().isdigit()]
+        scores = [int(s) for s in ratings.split(",") if s.strip().isdigit() and 1 <= int(s) <= 5]
     else:
         scores = []
+
     return round(sum(scores) / len(scores), 2) if scores else 0
