@@ -38,20 +38,14 @@ def add_rating(name, score):
 
 # 計算平均評分（僅納入 1~5 分、支援 float 格式）
 def calculate_average(rating_str):
-    if not rating_str or str(rating_str).strip().lower() == "nan":
+    if not rating_str:
         return "-"
 
     try:
-        # 不管是什麼形式，先統一中文逗號、括號清除
-        clean = str(rating_str).replace("［", "").replace("］", "").replace("[", "").replace("]", "")
-        clean = clean.replace("，", ",")  # 中文逗號轉英文
-        parts = clean.split(",")
-
-        # 把每一項變成整數，只保留 1～5 分之間的
-        ratings = [int(r.strip()) for r in parts if r.strip().isdigit() and 1 <= int(r.strip()) <= 5]
-
-        return round(sum(ratings) / len(ratings), 1) if ratings else "-"
+        digits = [int(ch) for ch in str(rating_str) if ch in "12345"]
+        return round(sum(digits) / len(digits), 1) if digits else "-"
     except:
         return "-"
+
 
 
