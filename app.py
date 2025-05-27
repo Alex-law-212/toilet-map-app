@@ -84,7 +84,8 @@ with col1:
 
         name = place["name"]
         type_ = place.get("type", "").strip().lower()
-        rating = calculate_average(place["ratings"])
+        ratings_raw = place.get("ratings", "")
+        rating = calculate_average(ratings_raw)
 
         icon_color = "gray"
         if type_ == "restaurant":
