@@ -83,8 +83,6 @@ with col1:
         ratings_raw = place.get("ratings", "")
         rating = calculate_average(ratings_raw)
 
-        st.write("地點：", name, "原始評分：", ratings_raw, "→ 平均：", rating)
-
         icon_color = "gray"
         if type_ == "restaurant":
             icon_color = "green"
