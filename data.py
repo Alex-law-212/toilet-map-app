@@ -40,10 +40,16 @@ def add_rating(name, score):
 def calculate_average(rating_str):
     if not rating_str or str(rating_str).strip().lower() == "nan":
         return "-"
+
     try:
+        # 不管是什麼形式，先統一中文逗號、括號清除
         clean = str(rating_str).replace("［", "").replace("］", "").replace("[", "").replace("]", "")
-        clean = clean.replace("，", ",")
-        ratings = [int(r.strip()) for r in clean.split(",") if r.strip().isdigit()]
+        clean = clean.replace("，", ",")  # 中文逗號轉英文
+        parts = clean.split(",")
+
+        # 把每一項變成整數，只保留 1～5 分之間的
+        ratings = [int(r.strip()) for r in parts if r.strip().isdigit() and 1 <= int(r.strip()) <= 5]
+
         return round(sum(ratings) / len(ratings), 1) if ratings else "-"
     except:
         return "-"
