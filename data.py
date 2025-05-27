@@ -37,7 +37,7 @@ def add_rating(name, score):
         raise ValueError(f"找不到地點或寫入錯誤：{e}")
 
 # 計算平均評分（僅納入 1~5 分、支援 float 格式）
-    def calculate_average(ratings):
+def calculate_average(ratings):
     try:
         # 轉成字串處理，不管來源是數字、空值、None 都能處理
         scores = [float(s) for s in str(ratings).split(",") if s.strip() and 1 <= float(s) <= 5]
