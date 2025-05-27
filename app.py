@@ -110,6 +110,7 @@ with col2:
 
         if st.button("送出評分"):
             add_rating(selected, score)
+            get_all_locations.clear()  # 清除快取，下次重新抓新資料
             st.success(f"✅ {selected} 評分成功：{score} 分")
     else:
         st.info("請先選擇有地點的分類")
