@@ -7,10 +7,6 @@ from geo import find_nearest
 from route import get_route
 from location import get_user_location
 
-# === 初次載入資料 ===
-if "location_data" not in st.session_state:
-    st.session_state["location_data"] = get_all_locations()
-
 # === 頁面設定 ===
 st.set_page_config(page_title="📍 地標互動地圖系統", layout="wide")
 st.title("📍 地標互動地圖 + 評分系統")
