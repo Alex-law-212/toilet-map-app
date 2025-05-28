@@ -91,12 +91,13 @@ with col1:
             icon_color = "blue"
 
         popup_html = f"""
+        <div style="width: 500px;">
         <b>{name}</b><br>
         類型: {type_}<br>
         平均評分: <b>{rating}</b><br>
         評分紀錄: <i>{ratings_raw if ratings_raw else '-'}</i>
         """
-        popup = folium.Popup(popup_html, max_width=5000, min_width=3000)
+        popup = folium.Popup(popup_html, max_width=600)
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
 
 
