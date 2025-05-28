@@ -32,6 +32,7 @@ def add_rating(name, score):
             updated = f"{current},{score}"
         else:
             updated = str(score)
+        st.write(f"將寫入的評分字串: {updated}")
         sheet.update_cell(row, 5, updated)
     except Exception as e:
         raise ValueError(f"找不到地點或寫入錯誤：{e}")
