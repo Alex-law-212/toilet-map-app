@@ -6,6 +6,7 @@ from data import get_all_locations, add_rating, calculate_average
 from geo import find_nearest
 from route import get_route
 from location import get_user_location
+from comment import add_comment, get_comments
 
 # === 頁面設定 ===
 st.set_page_config(page_title="📍 地標互動地圖系統", layout="wide")
