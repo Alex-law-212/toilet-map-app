@@ -91,7 +91,6 @@ with col1:
             icon_color = "blue"
 
         popup_html = f"""
-        <div style="width: 1000px;">
         <b>{name}</b><br>
         類型: {type_}<br>
         平均評分: <b>{rating}</b><br>
