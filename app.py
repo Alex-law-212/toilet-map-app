@@ -124,3 +124,26 @@ with col2:
     else:
         st.markdown("### 📍 尚未定位")
         st.info("請在上方定位或手動輸入座標")
+    # === 留言區 ===
+    st.subheader("💬 使用者留言")
+    if filtered:
+        comments_raw = next((p["comments"] for p in filtered if p["name"] == selected), "")
+        comments = get_comments(comments_raw)
+
+        if comments:
+            st.markdown("📃 現有留言：")
+            for c in comments:
+                st.markdown(f"- {c}")
+        else:
+            st.info("尚無留言，快來留言吧！")
+
+        new_comment = st.text_input("✏️ 發表新留言")
+        if st.button("送出留言") and new_comment:
+            try:
+                add_comment(selected, new_comment)
+                st.success("✅ 留言成功！")
+            except Exception as e:
+                st.error(f"❌ 留言失敗：{e}")
+    else:
+        st.info("請先選擇有地點的分類")
+
