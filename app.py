@@ -96,7 +96,7 @@ with col1:
         平均評分: <b>{rating}</b><br>
         評分紀錄: <i>{ratings_raw if ratings_raw else '-'}</i>
         """
-        popup = folium.Popup(popup_html, max_width=300)
+        popup = folium.Popup(popup_html, max_width=500, min_width=300)
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
 
 
