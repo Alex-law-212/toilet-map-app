@@ -90,8 +90,15 @@ with col1:
         elif type_ == "toilet":
             icon_color = "blue"
 
-        popup = f"<b>{name}</b><br>類型: {type_}<br>平均評分: {rating}"
+        popup_html = f"""
+        <b>{name}</b><br>
+        類型: {type_}<br>
+        平均評分: <b>{rating}</b><br>
+        評分紀錄: <i>{ratings_raw if ratings_raw else '-'}</i>
+        """
+        popup = folium.Popup(popup_html, max_width=300)
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
+
 
     user_pos = st.session_state.get("user_pos")
     route_coords = st.session_state.get("route_coords", [])
