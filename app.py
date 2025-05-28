@@ -122,6 +122,9 @@ with col2:
             filtered = [p for p in data if p.get("type", "").strip().lower() == category]
     else:
         st.info("請先選擇有地點的分類")
+    selected_rating_str = next((p.get("ratings", "") for p in filtered if p["name"] == selected), "")
+    st.write(f"目前選中地點的評分字串：{selected_rating_str}")
+    st.write(f"計算出的平均分數：{calculate_average(selected_rating_str)}")
 
     # === 顯示定位結果 ===
     user_pos = st.session_state.get("user_pos")
