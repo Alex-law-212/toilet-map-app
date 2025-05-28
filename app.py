@@ -113,6 +113,13 @@ with col2:
         if st.button("送出評分"):
             add_rating(selected, score)
             st.success(f"✅ {selected} 評分成功：{score} 分")
+    
+        # 重新讀取最新資料，更新 filtered 讓畫面能即時反映
+        data = get_all_locations()
+        if category is None:
+            filtered = data
+        else:
+            filtered = [p for p in data if p.get("type", "").strip().lower() == category]
     else:
         st.info("請先選擇有地點的分類")
 
