@@ -1,8 +1,7 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
-from data import get_all_locations, add_rating, calculate_average, split_ratings_readable
-
+from data import get_all_locations, add_rating, calculate_average
 from geo import find_nearest
 from route import get_route
 from location import get_user_location
@@ -29,7 +28,6 @@ if "user_pos" not in st.session_state:
     st.session_state["user_pos"] = None
 if "route_coords" not in st.session_state:
     st.session_state["route_coords"] = []
-
 profile = "foot-walking"
 
 # === 取得定位區塊 ===
@@ -41,7 +39,6 @@ with st.expander("📍 定位選項", expanded=True):
             st.success(f"✅ 已自動定位成功：{pos}")
         else:
             st.warning("⚠️ 無法取得定位，請確認瀏覽器已授權，或改用手動輸入")
-
 
     lat = st.number_input("🔢 手動輸入緯度", format="%.6f", value=25.0173)
     lng = st.number_input("🔢 手動輸入經度", format="%.6f", value=121.5398)
@@ -95,7 +92,7 @@ with col1:
         <b>{name}</b><br>
         類型: {type_}<br>
         平均評分: <b>{rating}</b><br>
-        評分紀錄: <i>{split_ratings_readable(ratings_raw)}</i>
+        評分紀錄: <i>{ratings_raw.replace(',', '、') if ratings_raw else '-'}</i>
         """
         popup = folium.Popup(popup_html, max_width=600)
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
