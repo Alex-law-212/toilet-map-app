@@ -1,7 +1,7 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
-from data import get_all_locations, add_rating, calculate_average
+from data import get_all_locations, add_rating, calculate_average, rating_history
 from geo import find_nearest
 from route import get_route
 from location import get_user_location
@@ -87,12 +87,12 @@ with col1:
             icon_color = "green"
         elif type_ == "toilet":
             icon_color = "blue"
-
+        from data import rating_history 
         popup_html = f"""
         <b>{name}</b><br>
         類型: {type_}<br>
         平均評分: <b>{rating}</b><br>
-        評分紀錄: <i>{ratings_raw if ratings_raw else '-'}</i>
+        評分紀錄: <i>{rating_history(ratings_raw)}</i>
         """
         popup = folium.Popup(popup_html, max_width=600)
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
@@ -127,6 +127,7 @@ with col2:
             filtered = [p for p in data if p.get("type", "").strip().lower() == category]
     else:
         st.info("請先選擇有地點的分類")
+    
     selected_rating_str = next((p.get("ratings", "") for p in filtered if p["name"] == selected), "")
     st.write(f"目前選中地點的評分字串：{selected_rating_str}")
     st.write(f"計算出的平均分數：{calculate_average(selected_rating_str)}")
