@@ -1,7 +1,6 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
-
 from data import get_all_locations, add_rating, calculate_average
 from geo import find_nearest
 from route import get_route
@@ -34,14 +33,6 @@ profile = "foot-walking"
 
 # === 取得定位區塊 ===
 with st.expander("📍 定位選項", expanded=True):
-
-
-
-
-
-
-
-
     if st.button("📍 嘗試自動定位（需授權）"):
         pos = get_user_location()
         if pos:
