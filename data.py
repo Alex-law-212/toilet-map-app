@@ -46,12 +46,14 @@ def calculate_average(rating_str):
         return round(sum(digits) / len(digits), 1) if digits else "-"
     except:
         return "-"
-#將評分str字串拆解為清單形式並格式化為可讀字串
-def split_ratings_readable(rating_str):
-    if not rating_str:
-        return "-"
-    clean = str(rating_str).replace("［", "").replace("］", "").replace("[", "").replace("]", "")
-    clean = clean.replace("，", ",")
-    parts = clean.split(",")
-    digits = [r.strip() for r in parts if r.strip().isdigit()]
-    return "、".join(digits) if digits else "-"
+#评分历史
+def rating_history(name):
+    sheet = connect_sheet()
+    try:
+        cell = sheet.find(name)
+        row = cell.row
+        history = sheet.cell(row, 5).value 
+        return history
+    except Exception as e:
+        return f"⚠️ 讀取評分紀錄錯誤：{e}"
+
