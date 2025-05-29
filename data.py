@@ -36,7 +36,7 @@ def add_rating(name, score):
         sheet.update_cell(row, 5, updated)
     except Exception as e:
         raise ValueError(f"找不到地點或寫入錯誤：{e}")
-#计算平均评分
+
 def calculate_average(rating_str):
     if not rating_str:
         return "-"
