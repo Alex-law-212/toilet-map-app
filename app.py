@@ -87,12 +87,11 @@ with col1:
             icon_color = "green"
         elif type_ == "toilet":
             icon_color = "blue"
-        from data import rating_history 
+        
         popup_html = f"""
         <b>{name}</b><br>
         類型: {type_}<br>
         平均評分: <b>{rating}</b><br>
-        評分紀錄: <i>{rating_history(name)}</i>
         """
         popup = folium.Popup(popup_html, max_width=600)
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
@@ -127,9 +126,9 @@ with col2:
             filtered = [p for p in data if p.get("type", "").strip().lower() == category]
     else:
         st.info("請先選擇有地點的分類")
-    
+    history = rating_history(selected)
     selected_rating_str = next((p.get("ratings", "") for p in filtered if p["name"] == selected), "")
-    st.write(f"目前選中地點的評分字串：{selected_rating_str}")
+    st.write(f"目前選中地點的評分字串：{history}")
     st.write(f"計算出的平均分數：{calculate_average(selected_rating_str)}")
 
     # === 顯示定位結果 ===
