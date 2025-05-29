@@ -40,6 +40,7 @@ def add_rating(name, score):
 def calculate_average(rating_str):
     if not rating_str:
         return "-"
+
     try:
         digits = [int(ch) for ch in str(rating_str) if ch in "12345"]
         return round(sum(digits) / len(digits), 1) if digits else "-"
