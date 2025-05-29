@@ -1,7 +1,8 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
-from data import get_all_locations, add_rating, calculate_average
+from data import get_all_locations, add_rating, calculate_average, split_ratings_readable
+
 from geo import find_nearest
 from route import get_route
 from location import get_user_location
@@ -94,7 +95,7 @@ with col1:
         <b>{name}</b><br>
         類型: {type_}<br>
         平均評分: <b>{rating}</b><br>
-        評分紀錄: <i>{ratings_raw if ratings_raw else '-'}</i>
+        評分紀錄: <i>{split_ratings_readable(ratings_raw)}</i>
         """
         popup = folium.Popup(popup_html, max_width=600)
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
