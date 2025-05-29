@@ -31,20 +31,25 @@ if "route_coords" not in st.session_state:
 profile = "foot-walking"
 
 # === 取得定位區塊 ===
-with st.expander("📍 定位選項", expanded=True):
-    if st.button("📍 嘗試自動定位（需授權）"):
-        pos = get_user_location()
-        if pos:
-            st.session_state["user_pos"] = pos
-            st.success(f"✅ 已自動定位成功：{pos}")
-        else:
-            st.warning("⚠️ 無法取得定位，請確認瀏覽器已授權，或改用手動輸入")
+from streamlit_geolocation import geolocation
 
-    lat = st.number_input("🔢 手動輸入緯度", format="%.6f", value=25.0173)
-    lng = st.number_input("🔢 手動輸入經度", format="%.6f", value=121.5398)
-    if st.button("✅ 使用手動輸入座標"):
+with st.expander("📍 定位選項", expanded=True):
+    st.markdown("### 📡 自動定位（手機需授權）")
+    if st.button("📍 嘗試自動定位"):
+        location = geolocation()
+        if location and location.get("latitude") is not None and location.get("longitude") is not None:
+            pos = (location["latitude"], location["longitude"])
+            st.session_state["user_pos"] = pos
+            st.success(f"✅ 已定位：緯度 {pos[0]}, 經度 {pos[1]}")
+        else:
+            st.warning("⚠️ 定位失敗，請確認瀏覽器已允許位置權限")
+
+    st.markdown("### 📝 手動輸入座標")
+    lat = st.number_input("🔢 緯度", format="%.6f", value=25.0173)
+    lng = st.number_input("🔢 經度", format="%.6f", value=121.5398)
+    if st.button("✅ 使用手動輸入"):
         st.session_state["user_pos"] = (lat, lng)
-        st.success(f"✅ 已設定自訂位置：({lat}, {lng})")
+        st.success(f"✅ 手動設定成功：({lat}, {lng})")
 
 # === 導航按鈕 ===
 if st.button("🚀 導航到最近地點"):
