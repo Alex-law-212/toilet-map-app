@@ -4,8 +4,8 @@ from streamlit_folium import st_folium
 from data import get_all_locations, add_rating, calculate_average, rating_history
 from geo import find_nearest
 from route import get_route
-from location import get_user_location
 from comment import add_comment, get_comments
+from streamlit_current_location import current_position
 
 # === 頁面設定 ===
 st.set_page_config(page_title="📍 地標互動地圖系統", layout="wide")
@@ -31,25 +31,28 @@ if "route_coords" not in st.session_state:
 profile = "foot-walking"
 
 # === 取得定位區塊 ===
-from streamlit_geolocation import geolocation
-
+from streamlit_current_location import current_position
 with st.expander("📍 定位選項", expanded=True):
-    st.markdown(" 自動定位（需授權）")
-    if st.button("📍 嘗試自動定位"):
-        location = geolocation()
-        if location and location.get("latitude") is not None and location.get("longitude") is not None:
-            pos = (location["latitude"], location["longitude"])
-            st.session_state["user_pos"] = pos
-            st.success(f"✅ 已定位：緯度 {pos[0]}, 經度 {pos[1]}")
-        else:
-            st.warning("⚠️ 定位失敗，請確認瀏覽器已允許位置權限")
+    st.markdown(" 自動定位（需手機/瀏覽器授權）")
+    location = current_position()
 
-    st.markdown(" 手動輸入座標")
-    lat = st.number_input("🔢 緯度", format="%.6f", value=25.0173)
-    lng = st.number_input("🔢 經度", format="%.6f", value=121.5398)
+    if location:
+        lat = location.get("latitude")
+        lon = location.get("longitude")
+        if lat and lon:
+            st.session_state["user_pos"] = (lat, lon)
+            st.success(f"✅ 成功取得位置：緯度 {lat}, 經度 {lon}")
+        else:
+            st.warning("⚠️ 無法解析位置資訊")
+    else:
+        st.info("📌 尚未取得定位，請確認瀏覽器已授權")
+
+    st.markdown("手動輸入座標")
+    lat_input = st.number_input("🔢 緯度", format="%.6f", value=25.0173)
+    lon_input = st.number_input("🔢 經度", format="%.6f", value=121.5398)
     if st.button("✅ 使用手動輸入"):
-        st.session_state["user_pos"] = (lat, lng)
-        st.success(f"✅ 手動設定成功：({lat}, {lng})")
+        st.session_state["user_pos"] = (lat_input, lon_input)
+        st.success(f"✅ 手動設定成功：({lat_input}, {lon_input})")
 
 # === 導航按鈕 ===
 if st.button("🚀 導航到最近地點"):
