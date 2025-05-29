@@ -46,12 +46,3 @@ def calculate_average(rating_str):
         return round(sum(digits) / len(digits), 1) if digits else "-"
     except:
         return "-"
-#將評分字串拆解為要显示的模式
-def split_ratings_readable(rating_str):
-    if not rating_str:
-        return "-"
-    clean = str(rating_str).replace("［", "").replace("］", "").replace("[", "").replace("]", "")
-    clean = clean.replace("，", ",")
-    parts = clean.split(",")
-    digits = [r.strip() for r in parts if r.strip().isdigit()]
-    return "、".join(digits) if digits else "-"
