@@ -41,10 +41,7 @@ def calculate_average(rating_str):
     if not rating_str:
         return "-"
     try:
-        # 以逗號分割字串，再轉成浮點數，過濾1~5分
-        scores = [float(s) for s in rating_str.split(",") if s.strip() and 1 <= float(s) <= 5]
-        if not scores:
-            return "-"
-        return round(sum(scores) / len(scores), 1)
-    except Exception:
+        digits = [int(ch) for ch in str(rating_str) if ch in "12345"]
+        return round(sum(digits) / len(digits), 1) if digits else "-"
+    except:
         return "-"
