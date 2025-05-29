@@ -5,3 +5,4 @@ openrouteservice
 streamlit-folium
 streamlit-geolocation
 geopy
+streamlit-current-location
