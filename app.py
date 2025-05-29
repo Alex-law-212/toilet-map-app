@@ -117,7 +117,7 @@ for place in filtered:
 with col2:
     st.subheader("⭐ 立即評分")
     if filtered:
-        place_options = [p["name"] for p in filtered]
+        place_options = [p["name"] for p in filtered if isinstance(p, dict) and "name" in p]
         selected = st.selectbox("請選擇地點", place_options)
         score = st.slider("請給出評分 (1~5)", 1, 5)
 
