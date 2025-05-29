@@ -1,7 +1,11 @@
-from streamlit_geolocation import streamlit_geolocation
+from streamlit_current_location import current_position
 
 def get_user_location():
-    location = streamlit_geolocation()
-    if location and location.get("latitude") is not None and location.get("longitude") is not None:
+    """
+    呼叫瀏覽器的 geolocation API，回傳使用者的座標 (latitude, longitude)，若失敗回傳 None。
+    """
+    location = current_position()
+
+    if location and "latitude" in location and "longitude" in location:
         return (location["latitude"], location["longitude"])
     return None
