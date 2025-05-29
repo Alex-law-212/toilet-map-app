@@ -79,7 +79,10 @@ with col1:
             lng = float(place["lng"])
         except:
             continue
-
+for place in filtered:
+    if not isinstance(place, dict) or "name" not in place or "lat" not in place or "lng" not in place:
+        continue  # 跳过不完整的資料
+        
         name = place["name"]
         type_ = place.get("type", "").strip().lower()
         ratings_raw = place.get("ratings", "")
