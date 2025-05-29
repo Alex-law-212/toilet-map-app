@@ -34,28 +34,28 @@ profile = "foot-walking"
 
 # === 取得定位區塊 ===
 with st.expander("📍 定位選項", expanded=True):
-    # 顯示目前定位狀態
-    user_pos = st.session_state.get("user_pos")
-    if user_pos:
-        st.success(f"✅ 目前定位 → 緯度：{user_pos[0]:.5f}, 經度：{user_pos[1]:.5f}")
-    else:
-        st.warning("📍 尚未定位，請使用下方自動或手動輸入")
 
-    # 嘗試自動定位（需使用者授權）
+
+
+
+
+
+
+
     if st.button("📍 嘗試自動定位（需授權）"):
         pos = get_user_location()
         if pos:
             st.session_state["user_pos"] = pos
-            st.success(f"✅ 自動定位成功：{pos}")
+            st.success(f"✅ 已自動定位成功：{pos}")
         else:
-            st.warning("⚠️ 無法取得定位，請確認瀏覽器授權，或改用下方手動方式")
+            st.warning("⚠️ 無法取得定位，請確認瀏覽器已授權，或改用手動輸入")
 
-    # 手動輸入座標
+
     lat = st.number_input("🔢 手動輸入緯度", format="%.6f", value=25.0173)
     lng = st.number_input("🔢 手動輸入經度", format="%.6f", value=121.5398)
     if st.button("✅ 使用手動輸入座標"):
         st.session_state["user_pos"] = (lat, lng)
-        st.success(f"✅ 已設定自訂位置：({lat:.5f}, {lng:.5f})")
+        st.success(f"✅ 已設定自訂位置：({lat}, {lng})")
 
 # === 導航按鈕 ===
 if st.button("🚀 導航到最近地點"):
