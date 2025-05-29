@@ -92,7 +92,7 @@ with col1:
         <b>{name}</b><br>
         類型: {type_}<br>
         平均評分: <b>{rating}</b><br>
-        評分紀錄: <i>{rating_history(ratings_raw)}</i>
+        評分紀錄: <i>{rating_history(name)}</i>
         """
         popup = folium.Popup(popup_html, max_width=600)
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
