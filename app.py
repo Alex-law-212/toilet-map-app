@@ -87,12 +87,14 @@ with col1:
             icon_color = "green"
         elif type_ == "toilet":
             icon_color = "blue"
+            
+ratings_display = ratings_raw.replace(',', '、') if ratings_raw else '-'
 
         popup_html = f"""
         <b>{name}</b><br>
         類型: {type_}<br>
         平均評分: <b>{rating}</b><br>
-        評分紀錄: <i>{ratings_raw.replace(',', '、') if ratings_raw else '-'}</i>
+        評分紀錄: <i>{ratings_display}</i>
         """
         popup = folium.Popup(popup_html, max_width=600)
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
