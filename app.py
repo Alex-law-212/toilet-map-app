@@ -88,7 +88,7 @@ with col1:
         elif type_ == "toilet":
             icon_color = "blue"
             
-ratings_display = ratings_raw.replace(',', '、') if ratings_raw else '-'
+        ratings_display = ratings_raw.replace(',', '、') if ratings_raw else '-'
 
         popup_html = f"""
         <b>{name}</b><br>
