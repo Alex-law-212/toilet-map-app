@@ -7,7 +7,6 @@ from route import get_route
 from location import get_user_location
 from comment import add_comment, get_comments
 
-
 # === 頁面設定 ===
 st.set_page_config(page_title="📍 地標互動地圖系統", layout="wide")
 st.title("📍 地標互動地圖 + 評分系統")
@@ -32,21 +31,26 @@ if "route_coords" not in st.session_state:
 profile = "foot-walking"
 
 # === 取得定位區塊 ===
-with st.expander("📍 定位選項", expanded=True):
-    if st.button("📍 嘗試自動定位"):
-        pos = get_user_location()
-        if pos:
-            st.session_state["user_pos"] = pos
-            st.success(f"✅ 定位成功：緯度 {pos[0]}, 經度 {pos[1]}")
-        else:
-            st.warning("⚠️ 無法取得定位，請確認瀏覽器已授權")
+from streamlit_geolocation import geolocation
 
-    # 手動輸入備援
+with st.expander("📍 定位選項", expanded=True):
+    st.markdown(" 自動定位（需授權）")
+    if st.button("📍 嘗試自動定位"):
+        location = geolocation()
+        if location and location.get("latitude") is not None and location.get("longitude") is not None:
+            pos = (location["latitude"], location["longitude"])
+            st.session_state["user_pos"] = pos
+            st.success(f"✅ 已定位：緯度 {pos[0]}, 經度 {pos[1]}")
+        else:
+            st.warning("⚠️ 定位失敗，請確認瀏覽器已允許位置權限")
+
+    st.markdown(" 手動輸入座標")
     lat = st.number_input("🔢 緯度", format="%.6f", value=25.0173)
     lng = st.number_input("🔢 經度", format="%.6f", value=121.5398)
     if st.button("✅ 使用手動輸入"):
         st.session_state["user_pos"] = (lat, lng)
         st.success(f"✅ 手動設定成功：({lat}, {lng})")
+
 # === 導航按鈕 ===
 if st.button("🚀 導航到最近地點"):
     user_pos = st.session_state["user_pos"]
