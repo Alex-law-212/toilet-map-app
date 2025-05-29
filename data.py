@@ -16,7 +16,7 @@ def connect_sheet():
     return sheet
 
 # 讀取所有地點資料（加上快取，避免每次重新抓）
-
+@st.cache_data(ttl=180)  # ⚠️ 每 180 秒才會重新抓取
 def get_all_locations():
     sheet = connect_sheet()
     return sheet.get_all_records()
