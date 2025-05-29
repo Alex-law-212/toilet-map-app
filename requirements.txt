@@ -1,7 +1,9 @@
-streamlit
-gspread
-google-auth
-openrouteservice
-streamlit-folium
-streamlit-geolocation
-geopy
+streamlit>=1.30
+gspread>=5.7.2
+google-auth>=2.22.0
+openrouteservice>=2.3.6
+streamlit-folium>=0.13.0
+streamlit-geolocation>=0.1.4
+geopy>=2.3.0
+oauth2client>=4.1.3
+pandas>=1.5.3
