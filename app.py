@@ -2,7 +2,7 @@ import streamlit as st
 import folium
 from streamlit_folium import st_folium
 
-from data import get_all_locations, add_rating, calculate_average, split_ratings_readable
+from data import get_all_locations, add_rating, calculate_average
 from geo import find_nearest
 from route import get_route
 from location import get_user_location
@@ -42,7 +42,6 @@ with st.expander("📍 定位選項", expanded=True):
         else:
             st.warning("⚠️ 無法取得定位，請確認瀏覽器已授權，或改用手動輸入")
 
-
     lat = st.number_input("🔢 手動輸入緯度", format="%.6f", value=25.0173)
     lng = st.number_input("🔢 手動輸入經度", format="%.6f", value=121.5398)
     if st.button("✅ 使用手動輸入座標"):
@@ -79,10 +78,7 @@ with col1:
             lng = float(place["lng"])
         except:
             continue
-for place in filtered:
-    if not isinstance(place, dict) or "name" not in place or "lat" not in place or "lng" not in place:
-        continue  # 跳过不完整的資料
-        
+
         name = place["name"]
         type_ = place.get("type", "").strip().lower()
         ratings_raw = place.get("ratings", "")
@@ -93,12 +89,12 @@ for place in filtered:
             icon_color = "green"
         elif type_ == "toilet":
             icon_color = "blue"
-        pretty_ratings = split_ratings_readable(ratings_raw)
+
         popup_html = f"""
         <b>{name}</b><br>
         類型: {type_}<br>
         平均評分: <b>{rating}</b><br>
-        評分紀錄: <i>{pretty_ratings}</i>
+        評分紀錄: <i>{ratings_raw if ratings_raw else '-'}</i>
         """
         popup = folium.Popup(popup_html, max_width=600)
         folium.Marker([lat, lng], popup=popup, icon=folium.Icon(color=icon_color)).add_to(m)
@@ -117,7 +113,7 @@ for place in filtered:
 with col2:
     st.subheader("⭐ 立即評分")
     if filtered:
-        place_options = [p["name"] for p in filtered if isinstance(p, dict) and "name" in p]
+        place_options = [p["name"] for p in filtered]
         selected = st.selectbox("請選擇地點", place_options)
         score = st.slider("請給出評分 (1~5)", 1, 5)
 
@@ -133,7 +129,7 @@ with col2:
             filtered = [p for p in data if p.get("type", "").strip().lower() == category]
     else:
         st.info("請先選擇有地點的分類")
-    selected_rating_str = next((p.get("ratings", "") for p in filtered if isinstance(p, dict) and p.get("name") == selected), "")
+    selected_rating_str = next((p.get("ratings", "") for p in filtered if p["name"] == selected), "")
     st.write(f"目前選中地點的評分字串：{selected_rating_str}")
     st.write(f"計算出的平均分數：{calculate_average(selected_rating_str)}")
 
