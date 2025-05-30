@@ -31,7 +31,6 @@ if "route_coords" not in st.session_state:
 profile = "foot-walking"
 
 # === 取得定位區塊 ===
-from streamlit_current_location import current_position
 with st.expander("📍 定位選項", expanded=True):
     st.markdown(" 自動定位（需手機/瀏覽器授權）")
     location = current_position()
